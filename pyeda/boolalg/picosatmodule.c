@@ -378,10 +378,12 @@ _satisfy_one(PyObject *self, PyObject *args, PyObject *kwargs)
             goto reset_picosat;
     }
 
-    /* Do the damn thing */
-    Py_BEGIN_ALLOW_THREADS
+    /*
+    ** Keep the GIL while running PicoSAT because this instance is configured
+    ** with Python memory allocators (PyMem_*). Releasing the GIL here can
+    ** lead to allocator calls without the GIL and crash the interpreter.
+    */
     result = picosat_sat(picosat, decision_limit);
-    Py_END_ALLOW_THREADS
 
     /* Prepare Python return value */
     if (result == PICOSAT_UNSATISFIABLE) {
@@ -572,10 +574,12 @@ _satisfy_all_next(_satisfy_all_state *state)
     /* Python return value */
     PyObject *pyret = NULL;
 
-    /* Do the damn thing */
-    Py_BEGIN_ALLOW_THREADS
+    /*
+    ** Keep the GIL while running PicoSAT because this instance is configured
+    ** with Python memory allocators (PyMem_*). Releasing the GIL here can
+    ** lead to allocator calls without the GIL and crash the interpreter.
+    */
     result = picosat_sat(state->picosat, state->decision_limit);
-    Py_END_ALLOW_THREADS
 
     /* Prepare Python return value */
     if (result == PICOSAT_UNSATISFIABLE) {
