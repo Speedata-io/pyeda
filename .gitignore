@@ -26,4 +26,5 @@ cover
 
 # Other
 .ipynb*
+.venv
 
