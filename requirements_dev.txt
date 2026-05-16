@@ -16,3 +16,5 @@ pytest-cov
 
 # Sphinx
 sphinx
+
+python3.14-dev
